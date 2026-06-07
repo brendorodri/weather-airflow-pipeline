@@ -1,11 +1,13 @@
 import requests
 import json
+import os
 from pathlib import Path
 
 import logging
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
+API_KEY = os.getenv('API_KEY')
 
 def extract_weather_data(url:str) -> list[dict]:
     """
@@ -49,4 +51,4 @@ def extract_weather_data(url:str) -> list[dict]:
     
     return data
 
-extract_weather_data(f'https://api.openweathermap.org/data/2.5/weather?q=Sao Paulo,BR&units=metric&appid={api_key}')
+extract_weather_data(f'https://api.openweathermap.org/data/2.5/weather?q=Sao Paulo,BR&units=metric&appid={API_KEY}')
