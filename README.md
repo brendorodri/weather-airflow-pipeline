@@ -100,7 +100,7 @@ flowchart TD
 ### 1. Clonar o repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/brendorodri/weather-airflow-pipeline.git
 cd weather-etl
 ```
 
