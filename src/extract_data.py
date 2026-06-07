@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-api_key = "3e289f616737c6e14a20e1c7fcb928b7"
+
 
 def extract_weather_data(url:str) -> list[dict]:
     """
