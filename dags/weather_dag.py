@@ -72,7 +72,7 @@ def weather_pipeline():
         
         # Se alguma regra falhar (Erro) ou der alerta (Warning), a task falha!
         if scan.has_error_or_warning():
-            raise ValueError("🚨 Falha na Qualidade de Dados! Verifique os logs do Soda.")
+            raise ValueError("Data quality check failed. Verify the logs for details.")
         
         logging.info("✅ Data Quality Check Passed! All checks are good. 🎉")
         
