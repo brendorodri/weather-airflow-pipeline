@@ -3,7 +3,7 @@ from airflow.models import DagBag
 
 @pytest.fixture()
 def dagbag():
-    # Apontando para a pasta correta da sua estrutura
+    # Ensure the path points to the directory where your DAG is located.
     return DagBag(dag_folder='dags', include_examples=False)
 
 def test_dag_import(dagbag):
@@ -13,18 +13,20 @@ def test_dag_import(dagbag):
 
 def test_dag_structure(dagbag):
     """Validates the topology, if tasks exist and are in the right order."""
-    # Substitua .get_dag() por .dags.get()
+    # Using .dags.get() to avoid database calls during unit testing
     dag = dagbag.dags.get('weather_pipeline')
     
-    # Checks the existence of the tasks
+    # 1. Check the existence of ALL 4 tasks
     task_ids = [task.task_id for task in dag.tasks]
-    assert set(task_ids) == {'extract', 'transform', 'load'}
+    assert set(task_ids) == {'extract', 'transform', 'load', 'data_quality_check'}
     
-    # Gets the task instances
+    # 2. Get the task instances
     extract_task = dag.get_task('extract')
     transform_task = dag.get_task('transform')
     load_task = dag.get_task('load')
+    dq_task = dag.get_task('data_quality_check')
     
-    # Checks the logical order of the ETL (>> or set_downstream)
+    # 3. Check the logical order of the ETL pipeline
     assert transform_task.task_id in extract_task.downstream_task_ids
     assert load_task.task_id in transform_task.downstream_task_ids
+    assert dq_task.task_id in load_task.downstream_task_ids # Validates DQ runs after load
