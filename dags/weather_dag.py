@@ -72,9 +72,9 @@ def weather_pipeline():
         # Loga os resultados no Airflow para você visualizar
         logging.info(scan.get_logs_text())
         
-        # Se alguma regra falhar (Erro) ou der alerta (Warning), a task falha!
+        # Se houver falhas ou avisos, levanta um erro para que o Airflow marque a tarefa como falhada
         if scan.has_check_warns_or_fails():
-            raise ValueError("Data Quality Check Failed! Please review the logs for details.")
+            raise ValueError("Data Quality Check Failed! Please review the logs for details. ❌")
         
         logging.info("✅ Data Quality Check Passed! All checks are good. 🎉")
         
