@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from airflow.sdk import dag, task
+from soda.scan import Scan
 from pathlib import Path
 import sys
 import os
@@ -48,6 +49,33 @@ def weather_pipeline():
         df = pd.read_parquet('/opt/airflow/data/temp_data.parquet')
         load_weather_data('sp_weather', df)
         
-    extract() >> transform() >> load()
+    @task
+    def data_quality_check():
+        import logging
+        
+        logging.info("Initializing Soda Data Quality Check... 🚀")
+        
+        # Inicializa o scanner do Soda
+        scan = Scan()
+        scan.set_data_source_name("weather_db")
+        
+        # Aponta para os arquivos que criamos na pasta config
+        # Use o caminho absoluto dentro do container do Airflow
+        scan.add_configuration_yaml_file("/opt/airflow/config/configuration.yml")
+        scan.add_sodacl_yaml_file("/opt/airflow/config/checks.yml")
+        
+        # Executa a varredura contra o banco de dados
+        scan.execute()
+        
+        # Loga os resultados no Airflow para você visualizar
+        logging.info(scan.get_logs_text())
+        
+        # Se alguma regra falhar (Erro) ou der alerta (Warning), a task falha!
+        if scan.has_error_or_warning():
+            raise ValueError("🚨 Falha na Qualidade de Dados! Verifique os logs do Soda.")
+        
+        logging.info("✅ Data Quality Check Passed! All checks are good. 🎉")
+        
+    extract() >> transform() >> load() >> data_quality_check()
 
 weather_pipeline()
