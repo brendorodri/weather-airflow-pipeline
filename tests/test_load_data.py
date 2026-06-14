@@ -1,13 +1,13 @@
 import pytest
 import pandas as pd
-from load_data import load_weather_data
+from src.load_data import load_weather_data
 
 def test_load_weather_data(mocker):
     # Intercepts the Pandas method that writes to the database
     mock_to_sql = mocker.patch('pandas.DataFrame.to_sql')
     
     # Intercepts the SQLAlchemy engine creation to avoid connecting to any database
-    mocker.patch('load_data.create_engine') 
+    mocker.patch('src.load_data.create_engine') 
     
     mock_df = pd.DataFrame({'city_name': ['Sao Paulo'], 'temperature': [25]})
     table_name = 'sp_weather'

@@ -4,11 +4,11 @@ from pathlib import Path
 import sys
 import os
 
-sys.path.insert(0, '/opt/airflow/src')
+sys.path.insert(0, '/opt/airflow/')
 
-from extract_data import extract_weather_data
-from load_data import load_weather_data
-from transform_data import data_transformations
+from src.extract_data import extract_weather_data
+from src.load_data import load_weather_data
+from src.transform_data import data_transformations
 from dotenv import load_dotenv
 
 env_path = Path(__file__).resolve().parent.parent / 'config' / '.env'

@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from transform_data import normalize_dataframe_columns, drop_columns, rename_columns
+from src.transform_data import normalize_dataframe_columns, drop_columns, rename_columns
 
 @pytest.fixture
 def raw_df():
