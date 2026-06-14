@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import os
 
+from yaml import scan
+
 sys.path.insert(0, '/opt/airflow/')
 
 from src.extract_data import extract_weather_data
@@ -71,8 +73,8 @@ def weather_pipeline():
         logging.info(scan.get_logs_text())
         
         # Se alguma regra falhar (Erro) ou der alerta (Warning), a task falha!
-        if scan.has_error_or_warning():
-            raise ValueError("Data quality check failed. Verify the logs for details.")
+        if scan.has_check_warns_or_fails():
+            raise ValueError("Data Quality Check Failed! Please review the logs for details.")
         
         logging.info("✅ Data Quality Check Passed! All checks are good. 🎉")
         
